@@ -1,0 +1,38 @@
+{
+  "name": "nim-default",
+  "title": "Napster Interactive Museum - landing page",
+  "source": "written for this project",
+  "fetched": "2026-10-07",
+  "default_host": "napster.com",
+  "era": "2000",
+  "aliases": {
+    "/client/home.html": "/",
+    "/client/discover.html": "http://docs.napster.com/",
+    "/client/help/": "http://docs.napster.com/help.html"
+  },
+  "reconstructed": [
+    "index.html - written for the museum; a plain opening, a feature table, then a short history adapted from Wikipedia",
+    "about.html - written for the museum"
+  ],
+  "known_gaps": [],
+  "notes": "Era A conventions from exhibits/DESIGN.md: black page, #CCCC99 content card, #666666 rail, Arial only, no em dashes. External links are dead in a sealed sandbox unless the config marks them `forward:`, so the Wikipedia attribution is printed as text rather than a link that cannot be followed.",
+  "sources": [
+    {
+      "for": "index.html, the 'What this was' section",
+      "title": "Napster",
+      "url": "https://en.wikipedia.org/wiki/Napster",
+      "licence": "CC BY-SA 4.0",
+      "retrieved": "2026-10-07",
+      "how": "adapted, not quoted; attribution shown on the page"
+    }
+  ],
+  "slots": {
+    "<!--nim:media-rail-->": "FILES in the left rail: links wearing period filenames. Expanded at serve time from the operator's config.",
+    "<!--nim:communities-->": "SOCIALS in the left rail. Ships one entry, spacehey, which is forwarded so it opens from inside the sealed client."
+  },
+  "links": {
+    "http://2000.napster.com/": "the one historic era, forwarded from the archive",
+    "http://docs.napster.com/": "the library's documentation, generated from its docstrings at request time",
+    "http://docs.napster.com/help.html": "the Help tab: where to put the client, and how to run each mode"
+  }
+}

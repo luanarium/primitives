@@ -1,0 +1,15 @@
+# Normalised band profiles, measured with ../analysis/profile.sh FILE 0 on the
+# files in this directory, 2026-10-20. Each band is that band's mean level
+# relative to the file's own overall mean, so two files can be compared without
+# matching their loudness first. Reading them as absolute levels is the mistake
+# that cost two rounds of work; see ../BRIEF.md, correction 6.
+#
+# file	seconds	mean dB	peak dB	250Hz	500Hz	1kHz	2kHz	4kHz
+AB original minute.mp3	60.1	-14.9	-1.3	-7.7	-13.7	-25.4	-43.2	-65.9
+AB resynthesised minute.mp3	60.0	-14.6	-1.2	-10.1	-14.2	-23.3	-38.4	-61.7
+Drone in A major, 10 min.mp3	600.0	-15.6	-0.7	-9.0	-13.8	-24.1	-37.3	-58.5
+# Not shipped as files, both one minute of seed 7 at 192 kbps, measured the
+# same way: what the mallets cost. They bypass the master slope by design, and
+# they are the whole of the generated piece's excess above 2 kHz.
+drone.mjs --minutes 1 --seed 7	60.0	-13.6	n/a	-9.0	-14.6	-24.8	-38.4	-60.6
+drone.mjs --minutes 1 --seed 7 --ping 0	60.0	-14.0	n/a	-9.3	-14.7	-25.9	-40.8	-65.5

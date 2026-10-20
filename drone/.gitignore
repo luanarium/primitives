@@ -1,0 +1,7 @@
+# renders land next to whatever you pointed --out at
+*.pcm
+.round-trip.wav
+
+# the A/B pair is not redistributed; samples/README.md says how to make it again
+samples/AB original minute.mp3
+samples/AB resynthesised minute.mp3

@@ -1,0 +1,259 @@
+{
+  "name": "napster-2000-03",
+  "title": "napster.com, 1 March 2000",
+  "mode": "forward",
+  "_mode": "No archived bytes live in this repository. The exhibit server forwards each request to the Internet Archive and serves the response to the client, which still reaches nothing itself. Nothing here is redistributed.",
+  "source": "https://web.archive.org/web/20000301154002/http://napster.com/",
+  "snapshot": "20000301154002",
+  "upstream": {
+    "template": "https://web.archive.org/web/{snapshot}{modifier}/{url}",
+    "modifier": {
+      "text": "id_",
+      "binary": "im_"
+    },
+    "_modifier": "id_ and im_ return the ORIGINAL bytes -- no Internet Archive toolbar, banner or rewritten links. That is what keeps the frame out of the client and the page's own URLs intact.",
+    "hosts": [
+      "napster.com",
+      "www.napster.com"
+    ]
+  },
+  "default_host": "napster.com",
+  "aliases": {
+    "/client/home.html": "/index.html",
+    "/client/discover.html": "/index.html",
+    "/client/help/": "/index.html"
+  },
+  "animations": [
+    "images/napster.gif (20 frames, animated wordmark)",
+    "images/arrows.gif (11 frames)"
+  ],
+  "reconstructed": {
+    "napster.com/clear.gif": {
+      "kind": "spacer-gif",
+      "why": "1x1 transparent layout spacer, referenced by the page and never captured by the archive. Structural rather than pictorial, so synthesising it cannot misrepresent anything.",
+      "generated": "at serve time, from napster.web.CLEAR_GIF; never stored"
+    }
+  },
+  "known_gaps": [
+    "images/bottom.gif",
+    "images/number-left.gif",
+    "images/number-top.gif",
+    "images/left-advertise-page.gif",
+    "images/left-groundzero-page.gif"
+  ],
+  "notes": "Assets keep their original URLs; nothing in the HTML was rewritten. Relative asset urls mean the client's /client/home.html must be served as a REDIRECT, not an internal rewrite, or every image resolves under /client/ and 404s. Nine rollover variants (-mo, -page) are referenced only from JavaScript arrays and were missed by the first extraction pass; they surfaced as 404s once a live client actually navigated the page, which is the only way to find them.",
+  "assets": {
+    "napster.com/index.html": {
+      "url": "http://napster.com/index.html",
+      "wayback": "https://web.archive.org/web/20000301154002id_/http://napster.com/index.html",
+      "sha256": "904e5db927451cc437b9f451b12ba89189c8c1d1ce3554d7a6f1c766566f85a9",
+      "bytes": 12531
+    },
+    "napster.com/images/arrows.gif": {
+      "url": "http://napster.com/images/arrows.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/arrows.gif",
+      "sha256": "da4e95ab1b6391ddefe7b7a5450e09eab771da7a5491f2f66d1d456ef89fb012",
+      "bytes": 11890
+    },
+    "napster.com/images/available.gif": {
+      "url": "http://napster.com/images/available.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/available.gif",
+      "sha256": "3a1d41256dfb28eeaac69a4e0dbe585bb4ffe16c918e4a30f20e720c033a11fc",
+      "bytes": 641
+    },
+    "napster.com/images/bk.gif": {
+      "url": "http://napster.com/images/bk.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/bk.gif",
+      "sha256": "d80bd420c8d65bd7e30ad24d715fab91041bf52e5586aebbdafccde238137dca",
+      "bytes": 50
+    },
+    "napster.com/images/body-spacer.gif": {
+      "url": "http://napster.com/images/body-spacer.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/body-spacer.gif",
+      "sha256": "92ae99353078006586c2568032075e40deb0a291c8e8bda8a044f9c5321ae43d",
+      "bytes": 67
+    },
+    "napster.com/images/bodycurve-yellow.gif": {
+      "url": "http://napster.com/images/bodycurve-yellow.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/bodycurve-yellow.gif",
+      "sha256": "f9b4d3b1617a88ada27a1c3e9224cf428d3fc819b5743eab6158b8f472a3f23a",
+      "bytes": 366
+    },
+    "napster.com/images/cap-yellow.gif": {
+      "url": "http://napster.com/images/cap-yellow.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/cap-yellow.gif",
+      "sha256": "da83c922914ec8aeb4721023219e994621eb5648e180ab609467dc9574a834d2",
+      "bytes": 1452
+    },
+    "napster.com/images/clear.gif": {
+      "url": "http://napster.com/images/clear.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/clear.gif",
+      "sha256": "2dfe28cbdb83f01c940de6a88ab86200154fd772d568035ac568664e52068363",
+      "bytes": 43
+    },
+    "napster.com/images/company.gif": {
+      "url": "http://napster.com/images/company.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/company.gif",
+      "sha256": "18dc099339b9db5cb8f4c2cee3278a49379d6c0856b701480ef9b98fc727c723",
+      "bytes": 1044
+    },
+    "napster.com/images/download-curve.gif": {
+      "url": "http://napster.com/images/download-curve.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/download-curve.gif",
+      "sha256": "6c0860ea88676761122379c8741ec26ca714982c900177d08c0866b1ff332bb0",
+      "bytes": 804
+    },
+    "napster.com/images/download-mo.gif": {
+      "url": "http://napster.com/images/download-mo.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/download-mo.gif",
+      "sha256": "6b282b1e356edf3973143708246be39cb46631abd2a582fba7112d415b77e946",
+      "bytes": 3072
+    },
+    "napster.com/images/download.gif": {
+      "url": "http://napster.com/images/download.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/download.gif",
+      "sha256": "452adf270d0e7f2fd5017bbc9c29b1069e83b9b6ea921d94241e45eeb8befb88",
+      "bytes": 2799
+    },
+    "napster.com/images/home-page.gif": {
+      "url": "http://napster.com/images/home-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/home-page.gif",
+      "sha256": "adc4bd32536edc52e7154373fd3398badd58ca0ec6742f26b79a5a5083e7a602",
+      "bytes": 1289
+    },
+    "napster.com/images/left-advertise.gif": {
+      "url": "http://napster.com/images/left-advertise.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-advertise.gif",
+      "sha256": "7a672a4ff5f3394796d25e890a44f2d9dbf5c98f6b485ea4444ce062207f1f7a",
+      "bytes": 779
+    },
+    "napster.com/images/left-bottom.gif": {
+      "url": "http://napster.com/images/left-bottom.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-bottom.gif",
+      "sha256": "3e5d7045c2f7b7119d1a6d3dd66258f7a495fc50c3d2c765987bf268dc4ead04",
+      "bytes": 393
+    },
+    "napster.com/images/left-company-page.gif": {
+      "url": "http://napster.com/images/left-company-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-company-page.gif",
+      "sha256": "c9888b4d40404a7eed868af154330ae47ca2fe43a7e8110ce60ac567d81b84cf",
+      "bytes": 931
+    },
+    "napster.com/images/left-company.gif": {
+      "url": "http://napster.com/images/left-company.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-company.gif",
+      "sha256": "10d3fe0e2e2cb2af419f043a4b98adf0c386f65fd1c328159ec2c8ba6a5d2628",
+      "bytes": 1415
+    },
+    "napster.com/images/left-download-page.gif": {
+      "url": "http://napster.com/images/left-download-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-download-page.gif",
+      "sha256": "809791de5c399b27cb320abb6013bbd540b6cbadd7d35d92c499f93c6cf85258",
+      "bytes": 966
+    },
+    "napster.com/images/left-download.gif": {
+      "url": "http://napster.com/images/left-download.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-download.gif",
+      "sha256": "36d47348c0b453b660e881fe31258f3db01f5d17d52b74ef9854b8cfafb4e53d",
+      "bytes": 1460
+    },
+    "napster.com/images/left-groundzero.gif": {
+      "url": "http://napster.com/images/left-groundzero.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-groundzero.gif",
+      "sha256": "3208af08dd92205d897f9b949639daeab0563c1c57a11af25865e054832cfc96",
+      "bytes": 911
+    },
+    "napster.com/images/left-help-page.gif": {
+      "url": "http://napster.com/images/left-help-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-help-page.gif",
+      "sha256": "37a08b69d6ae74e5b51fc2bf3102f85d3a22f4cf157907b93dafa50fad4b694f",
+      "bytes": 778
+    },
+    "napster.com/images/left-help.gif": {
+      "url": "http://napster.com/images/left-help.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-help.gif",
+      "sha256": "871ec3429bff213fdaed9d9b1b404f77027f2c23dfec0dc2770f95adab477bc5",
+      "bytes": 818
+    },
+    "napster.com/images/left-press-page.gif": {
+      "url": "http://napster.com/images/left-press-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-press-page.gif",
+      "sha256": "33186feb8b3c62b3d9a03ca008d4c74418c15b5a01d283d28f7720e6b64ef5a2",
+      "bytes": 823
+    },
+    "napster.com/images/left-privacy-page.gif": {
+      "url": "http://napster.com/images/left-privacy-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-privacy-page.gif",
+      "sha256": "bd7d3c91ee09296cc059e9a5492f950c31fda254fe16db2d237fbdc1f62fa24e",
+      "bytes": 1211
+    },
+    "napster.com/images/left-space.gif": {
+      "url": "http://napster.com/images/left-space.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-space.gif",
+      "sha256": "4c6fc04ca2d9eff147254a2550feb3f868a4336ceca2c4550733cb0664048682",
+      "bytes": 288
+    },
+    "napster.com/images/left-terms-page.gif": {
+      "url": "http://napster.com/images/left-terms-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-terms-page.gif",
+      "sha256": "8ced614dcd34286d3a9558c81b26aac7a717ada840b53727f814787991378ab5",
+      "bytes": 1147
+    },
+    "napster.com/images/left-terms.gif": {
+      "url": "http://napster.com/images/left-terms.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-terms.gif",
+      "sha256": "01a36ad83229cb6a3ca217d94268a9cc371e91f984f2c630bc04a5d13e537e55",
+      "bytes": 900
+    },
+    "napster.com/images/left-whatis-page.gif": {
+      "url": "http://napster.com/images/left-whatis-page.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-whatis-page.gif",
+      "sha256": "ba00c1298c21b62c03bcfd7589d6eb342524359e76c4407407abf28d419947c2",
+      "bytes": 1304
+    },
+    "napster.com/images/left-whatis.gif": {
+      "url": "http://napster.com/images/left-whatis.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/left-whatis.gif",
+      "sha256": "147b78a7ba110dd2fe2aabf0662c1c1355886612ce9f1a2a7c639d0f05b6aa1b",
+      "bytes": 1855
+    },
+    "napster.com/images/napster.gif": {
+      "url": "http://napster.com/images/napster.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/napster.gif",
+      "sha256": "ae565b08cb035edb44e01df8fb4eb49b866ecb988ad0f71312791bdae6d36863",
+      "bytes": 23021
+    },
+    "napster.com/images/number-bottom.gif": {
+      "url": "http://napster.com/images/number-bottom.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/number-bottom.gif",
+      "sha256": "5b35d3bec8237dfd1dd702065f9cc0543d03d69d80bdb78738f156eaf00a8c9e",
+      "bytes": 134
+    },
+    "napster.com/images/number-right.gif": {
+      "url": "http://napster.com/images/number-right.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/number-right.gif",
+      "sha256": "619f0b6ed7eff7841cee01d17ad14571683675331f08889a8fe662d18d52b9d6",
+      "bytes": 169
+    },
+    "napster.com/images/songs.gif": {
+      "url": "http://napster.com/images/songs.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/songs.gif",
+      "sha256": "199a55a6e8f6a4d78c73ea27c4d380fe61e613420e09d14943d0650d0e3f88ad",
+      "bytes": 161
+    },
+    "napster.com/images/whatis-mo.gif": {
+      "url": "http://napster.com/images/whatis-mo.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/whatis-mo.gif",
+      "sha256": "97033a0cbe72e50c0ac14343f13b1475680f785c3513ce48dd18e444e0baec42",
+      "bytes": 2483
+    },
+    "napster.com/images/whatis.gif": {
+      "url": "http://napster.com/images/whatis.gif",
+      "wayback": "https://web.archive.org/web/20000301154002im_/http://napster.com/images/whatis.gif",
+      "sha256": "2df744a5e7533a5d13d536f6b9b4d3c02745e23dc8ba544b804be920502bd77f",
+      "bytes": 2174
+    }
+  },
+  "_assets": "A record, not a shipping list: every file the live client pulled while walking this page, with the digest it had when captured. It proves what was served without holding any of it, lets a cache be warmed ahead of time, and makes a silent upstream change visible.",
+  "_reconstructed": "Paths served from something this project made rather than from the archive. Exact paths, not patterns: napster.com/images/clear.gif IS archived and must come from upstream."
+}

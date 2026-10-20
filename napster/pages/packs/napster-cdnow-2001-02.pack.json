@@ -1,0 +1,118 @@
+{
+  "name": "napster-cdnow-2001-02",
+  "title": "napster.cdnow.com, 23 February 2001",
+  "mode": "forward",
+  "_mode": "No archived bytes live in this repository; this is forwarded from the Internet Archive like every other exhibit.",
+  "why": "The client's top-right banner reads 'Shop for music at CDNOW'. The binary holds that menu string but no URL at all -- every URL in napster.exe is a napster.com one. Driving the live client under a WinINet proxy showed the button requests http://shop.napster.com/, which in the era answered 302 to this co-branded CDNOW subdomain. So the button never pointed at cdnow.com directly; it pointed at a first-party redirector carrying an affiliate tag (visible in the archive as 'from=sr-5274506').",
+  "source": "https://web.archive.org/web/20010223213245/http://napster.cdnow.com/",
+  "snapshot": "20010223213245",
+  "upstream": {
+    "template": "https://web.archive.org/web/{snapshot}{modifier}/{url}",
+    "modifier": {
+      "text": "id_",
+      "binary": "im_"
+    },
+    "hosts": [
+      "napster.cdnow.com",
+      "gs.cdnow.com"
+    ]
+  },
+  "default_host": "napster.cdnow.com",
+  "reached_via": {
+    "shop.napster.com": "302 -> http://napster.cdnow.com/, as it answered in the era. Mounted as a redirect rather than serving this page under that name: it is what actually happened, and serving directly was tried and gained nothing."
+  },
+  "dating": "The earliest archived 302 for shop.napster.com is 2001-02-20; the earliest 200 for napster.cdnow.com is 2001-02-23. Both are within six weeks of this client's build date (2001-01-10), so this is close to what its button actually reached. There is no capture of either host from 2000, which is why the March 2000 exhibit has no contemporaneous shop page.",
+  "aliases": {},
+  "reconstructed": {},
+  "known_gaps": [],
+  "assets": {
+    "gs.cdnow.com/RP/NAPSTER/graphics/advance_orders.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/advance_orders.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/advance_orders.gif",
+      "sha256": "e7d2c5e2dfc345840f48abb59b588673b1776ad061f4628008bb1f14b18b7f26",
+      "bytes": 550
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/angle_bottom_left.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/angle_bottom_left.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/angle_bottom_left.gif",
+      "sha256": "91a21ad73830292863a8739a9f9227bff08f75a9625ee1d7d726a6597a424564",
+      "bytes": 133
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/angle_top_right.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/angle_top_right.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/angle_top_right.gif",
+      "sha256": "a59e18a395ac1c472bf885cde6cacbae970932c72c5d02f170ac28ecb7cbb830",
+      "bytes": 174
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/browse_styles.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/browse_styles.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/browse_styles.gif",
+      "sha256": "254ed9c08409587a396afa2cc86ec20a9757abf75c757ed165a312f2f806d66c",
+      "bytes": 943
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/cdnow_logo.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/cdnow_logo.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/cdnow_logo.gif",
+      "sha256": "1f3bcb46a2905b422185881997bc631a3d6ba0df97c3d6ddf51a6077fe654cdd",
+      "bytes": 1916
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/go.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/go.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/go.gif",
+      "sha256": "85327c5a37297ec2698daafb89df3b46a1c5e5893086a1972caf47b0e5ac9c6b",
+      "bytes": 242
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/new_releases_in.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/new_releases_in.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/new_releases_in.gif",
+      "sha256": "20fc24cc51372b24a3c79ba67f315a3a72163f97086199f2f5ee655586e30a0d",
+      "bytes": 495
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/search.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/search.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/search.gif",
+      "sha256": "34e894e1a9b7b79b73d966d28e2e9b74297de133976946d0ab8e86ff3abb5d5a",
+      "bytes": 903
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/search_bg.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/search_bg.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/search_bg.gif",
+      "sha256": "17836bef387a9569b49ab8baa5120284abd55ff580f8e7221b2f3f9649a11bd8",
+      "bytes": 66
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/search_classical.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/search_classical.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/search_classical.gif",
+      "sha256": "2886430f56901063953ac1aa931bf0c2ff0c0edbf8b77ab1491e065ed771dcbe",
+      "bytes": 1276
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/shop.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/shop.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/shop.gif",
+      "sha256": "0532796cabd1bfd1878d278c054d7e532ac28dfd56d665e1015b074b93a4ccfe",
+      "bytes": 1464
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/welcome_angle_top.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/welcome_angle_top.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/welcome_angle_top.gif",
+      "sha256": "25a80d7ae8d4474a1db78466b8db3edfed4964553893fcbd25b472a9a327d281",
+      "bytes": 168
+    },
+    "gs.cdnow.com/RP/NAPSTER/graphics/welcome_bkgd.gif": {
+      "url": "http://gs.cdnow.com/RP/NAPSTER/graphics/welcome_bkgd.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/RP/NAPSTER/graphics/welcome_bkgd.gif",
+      "sha256": "4e3844c223f015a68b65d9f5c1c0a6b9bb2f0c3c07ed09b25d92f0d0ddc1eeb1",
+      "bytes": 74
+    },
+    "gs.cdnow.com/graphics/spacer.gif": {
+      "url": "http://gs.cdnow.com/graphics/spacer.gif",
+      "wayback": "https://web.archive.org/web/20010223213245im_/http://gs.cdnow.com/graphics/spacer.gif",
+      "sha256": "e586a84d8523747f42e510d78e141015b6424cf67d612854e892a7bcedc8ec9e",
+      "bytes": 43
+    }
+  },
+  "_assets": "Recorded by walking the page with a live fetch, as the 2000 pack's list was. A record of what has been seen, not a limit on what can be served.",
+  "asset_hosts": {
+    "gs.cdnow.com": "Every image on this page, 93 references. Mapping only the page host gives a correct layout and a grid of broken-image icons -- the same lesson the live-site forwarding learned."
+  }
+}

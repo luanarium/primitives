@@ -1,0 +1,191 @@
+<html>
+<head><title>NIM - documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head>
+<body bgcolor="#000000" text="#000000" link="#000099" vlink="#336699" alink="#FFCC00">
+<table border="0" cellpadding="0" cellspacing="0" width="640"><tr><td>
+<table border="0" cellpadding="0" cellspacing="0" width="640">
+<tr><td width="22">&nbsp;</td>
+<td><font face="Arial, Helvetica, sans-serif" size="5" color="#CCCC99"><b>NIM</b></font>
+<font face="Arial, Helvetica, sans-serif" size="3" color="#999999">
+&nbsp;documentation</font></td></tr>
+<tr><td colspan="2" height="10">&nbsp;</td></tr></table>
+<table border="0" cellpadding="0" cellspacing="0" width="640"><tr>
+<td width="150" valign="top" bgcolor="#666666">
+<table border="0" cellpadding="8" cellspacing="0" width="150"><tr><td>
+<font face="Arial, Helvetica, sans-serif" size="2" color="#CCCCCC">
+<b>CONTENTS</b><br><br>
+<a href="#quickstart"><font color="#FFFFFF">Quick start</font></a><br><a href="#use"><font color="#FFFFFF">Usage</font></a><br><a href="#client"><font color="#FFFFFF">The client</font></a><br><a href="#pages"><font color="#FFFFFF">The pages</font></a><br><a href="#chat"><font color="#FFFFFF">Chat adapters</font></a><br><a href="#search"><font color="#FFFFFF">Search and users</font></a><br>
+<br><a href="http://napster.com/"><font color="#FFFFFF">back to NIM</font></a><br>
+</font></td></tr></table></td>
+<td valign="top" bgcolor="#CCCC99">
+<table border="0" cellpadding="14" cellspacing="0" width="490"><tr><td>
+<font face="Arial, Helvetica, sans-serif" size="3">
+<a name="quickstart"></a><font size="4"><b>Quick start</b></font><br><br><p>NIM's sandbox answers the 2001 protocol, serves the pages the client loads, carries chat, and presents a local music collection as search results, so an original client can be used the way it was used at the time.</p><p>The client is yours to supply and NIM never installs one. Where it goes depends on how you run it, and that is what a <b>mode</b> sets: a Wine prefix on this machine, or Windows in a VM. Each mode is installed and run on its own:</p><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top"><font face="Courier New, monospace" size="3"><b>nim-byo</b></font></td><td width="14">&nbsp;</td><td valign="top"><font size="3">A client you installed yourself, in your own Wine prefix. Configures it in place and starts it. Redirects the client; does not confine it.<br><font color="#666666" size="2">nim-mode-byo-wine</font></font></td></tr><tr><td colspan="3" height="8">&nbsp;</td></tr><tr><td valign="top"><font face="Courier New, monospace" size="3"><b>nim-vm</b></font></td><td width="14">&nbsp;</td><td valign="top"><font size="3">A client in a Windows VM, or on real hardware. Writes a .reg to apply in the guest. With a host-only adapter the guest&#x27;s only route anywhere is this machine, which is the stronger seal of the two.<br><font color="#666666" size="2">nim-mode-vm-guest</font></font></td></tr><tr><td colspan="3" height="8">&nbsp;</td></tr></table><p>Install a mode, run it, and it prints what to do next:</p><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">uv tool install --find-links nim/dist ./nim/modes/byo-wine
+nim-byo                       # uses $WINEPREFIX
+nim-byo --prefix ~/.wine-napster --nick preserve
+
+uv tool install --find-links nim/dist ./nim/modes/vm-guest
+nim-vm --host 192.168.56.1    # with no --host it lists candidates</font></pre></td></tr></table><p>The <tt>--find-links</tt> is only needed until the sandbox itself is published: it tells uv where to find the library a mode depends on, built by <tt>uv build</tt> in <tt>nim/library</tt>. Removing a mode is <tt>uv tool uninstall nim-mode-byo-wine</tt>.</p><p><b>Where the client goes.</b> For <tt>nim-byo</tt>, install it into a Wine prefix with its own installer (<tt>WINEPREFIX=~/.local/share/nim/wineprefix wine setup.exe</tt>) and the mode finds <tt>napster.exe</tt> inside that prefix by itself; <tt>--prefix</tt> points at another one. For <tt>nim-vm</tt>, install it inside the guest as you would any Windows program -- nothing on this side needs a copy. The Help tab has both in full.</p><p><b>The account matters.</b> The client stores its proxy settings per account, under <tt>HKLM\Software\Napster\&lt;nick&gt;</tt>, so sign in as the nick the mode configured. Signing in as anyone else dials <tt>server.napster.com</tt> and fails.</p><p><b>Nothing needs name resolution.</b> The proxy routes by destination port and ignores the address, because the address the client asks for is its own failed resolution of a hostname compiled into the binary. So no hosts file, no resolver, and no namespace is required just to point a client here.</p><p>The sandbox alone, with no mode around it, is <tt>napster-sandbox</tt>. It needs no checkout either: the exhibit manifests ship inside the package.</p><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">napster-sandbox --socks            # and point a client at it
+nim-client configure --prefix ~/.wine --nick preserve
+nim-client emit --nick preserve --host 192.168.56.1 -o nim.reg</font></pre></td></tr></table><br><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td bgcolor="#999999" height="1"></td></tr></table><br><a name="use"></a><font size="4"><b>Usage</b></font><br><br><p>NIM is a Python library with a server built on it. Every part of the server has a working default, so this runs:</p><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">from napster import Deployment, serve
+
+serve(Deployment())</font></pre></td></tr></table><p>The sandbox serves a real directory as search results:</p><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">from napster import Deployment, serve
+from napster.providers.collection import LocalCollection
+
+library = LocalCollection(&#x27;~/Music&#x27;, seed=&#x27;nim&#x27;)
+library.index()
+
+serve(Deployment(library=library))</font></pre></td></tr></table><p>The fields are the capability domains. Each one is a <tt>typing.Protocol</tt>, so anything with the right methods will do.</p><font size="2" color="#666666">napster.deployment . Deployment</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">@dataclass(frozen=True)
+class Deployment:
+
+    identity: Any = field(default_factory=InMemoryIdentity)
+    presence: Any = field(default_factory=SessionRegistryPresence)
+    chat: Any = field(default_factory=InternalChat)
+    library: Any = field(default_factory=InMemoryLibrary)
+    rendezvous: Any = field(default_factory=DirectRendezvous)
+    policy: Any = field(default_factory=DefaultPolicy)
+    web: Any = None
+    mail: Any = None
+    federation: Any = None
+
+    # Surfaces the client reaches that are not the protocol itself.
+    metaserver_targets: tuple[str, ...] = ()</font></pre></td></tr></table><br><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td bgcolor="#999999" height="1"></td></tr></table><br><a name="client"></a><font size="4"><b>The client</b></font><br><br><p>NIM does not ship a Napster client and does not link to one. You supply the binary, and the Help tab says where to put it.</p><p>Three things have to be true before it works: it has to reach the server, its browser has to reach the pages, and a link it opens must not escape to the host.</p><p>It reaches the server through its own proxy setting, which carries the control connection and not only transfers. The proxy routes by destination port and ignores the address, so no name resolution is involved:</p><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">HKLM\Software\Napster\&lt;nick&gt;
+    ProxyServer  = 127.0.0.1
+    ProxyPort    = 1080
+    ProxyVersion = 5</font></pre></td></tr></table><p><tt>nim-client</tt> writes those into a Wine prefix, or emits them as a <tt>.reg</tt> for a client in a VM. <tt>nim-client show --nick &lt;nick&gt;</tt> prints them and writes nothing.</p><p>First contact is not the server port. The client asks a metaserver on 8875 where to go, and the server speaks first:</p><font size="2" color="#666666">napster.metaserver . Metaserver.handle</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">async def handle(self, reader: asyncio.StreamReader,
+                 writer: asyncio.StreamWriter) -&gt; None:
+    try:
+        # The client&#x27;s first connection of all. In the era a name lookup
+        # sat in front of this.
+        await self.latency.pause(&quot;metaserver&quot;)
+        writer.write(f&quot;{next(self._cycle)}\n&quot;.encode(&quot;latin1&quot;))
+        await writer.drain()
+    except ConnectionError:
+        pass
+    finally:
+        writer.close()</font></pre></td></tr></table><p>It reaches the pages through a second setting, because the embedded browser honours WinINet rather than the client's own proxy. The sealed museum mode maps names instead, inside its namespace:</p><font size="2" color="#666666">napster.web . hosts_line</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def hosts_line(ip: str = &quot;127.0.0.1&quot;, *, include_forwarded: bool = True) -&gt; str:
+    extra = (&quot;server.napster.com&quot;, &quot;server2.napster.com&quot;, &quot;upgrade.napster.com&quot;,
+             &quot;download.napster.com&quot;, &quot;mail.napster.com&quot;)
+    names = [*MUSEUM_HOSTS, *extra]
+    if include_forwarded:
+        try:
+            from .communities import forwarded_hosts
+            names += [h for h in forwarded_hosts() if h not in names]
+        except Exception:
+            pass
+    return f&quot;{ip}\tlocalhost &quot; + &quot; &quot;.join(names)</font></pre></td></tr></table><p>The link is the one that is easy to miss. A click calls ShellExecute, and Wine hands the url to a program outside the prefix, on the real network. The handler is pointed at the prefix's own browser, which reaches only what the sandbox serves. <tt>nim-client configure</tt> sets that too.</p><br><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td bgcolor="#999999" height="1"></td></tr></table><br><a name="pages"></a><font size="4"><b>The pages</b></font><br><br><p>The client's Home tab loads a web page over plain HTTP on port 80. The browser is the Windows one, not the client's own socket layer, so it ignores the SOCKS proxy and goes by name. NIM serves those names itself.</p><p>Pages are mounted per host rather than per path. Archived pages use relative urls, so a snapshot served under a subdirectory looks for its images in the wrong place, while the same snapshot on its own hostname works untouched.</p><font size="2" color="#666666">napster.web . museum</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def museum(exhibits_dir: str | Path, *, landing: str = &quot;nim-default&quot;,
+           cache_dir=None, log=None) -&gt; ExhibitServer:</font></pre></td></tr></table><p>NIM's own pages are files on disk. The 2000 snapshot is not: nothing archived is stored in this project. It is fetched from the Internet Archive when something asks for it, then cached outside the repository. The <tt>id_</tt> and <tt>im_</tt> modifiers return the original bytes, with no archive toolbar wrapped around them:</p><font size="2" color="#666666">napster.web . ForwardExhibit.upstream_url</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def upstream_url(self, host: str, path: str, *, index: bool = True) -&gt; str:
+    host = self.archived_host(host)
+    rel = urllib.parse.urlparse(path).path or &quot;/&quot;
+    directory = rel.endswith(&quot;/&quot;)
+    if directory and index:
+        rel += &quot;index.html&quot;
+    suffix = Path(rel).suffix.lower()
+    # A bare directory url has no suffix but is a page, so it needs the
+    # text modifier. Without this it is fetched as if it were an image and
+    # the archive&#x27;s toolbar comes back embedded in the html.
+    modifier = (self.text_mod
+                if directory or suffix in _TEXT_SUFFIXES
+                else self.binary_mod)
+    return self.template.format(
+        snapshot=self.snapshot, modifier=modifier,
+        url=f&quot;http://{host}{rel}&quot;)</font></pre></td></tr></table><p>The CDNOW button in the top right of the client is wired through the same machinery. The binary holds the menu text but no url at all. Driving the live client under a logging proxy showed it requests <tt>shop.napster.com</tt>, which in 2001 answered a redirect to a co-branded CDNOW page. NIM answers the same redirect, and forwards what it points at:</p><font size="2" color="#666666">napster.web . RedirectExhibit.redirect_for</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def redirect_for(self, host: str, path: str) -&gt; str | None:
+    return self.target</font></pre></td></tr></table><p>So the button resolves, and the page it lands on is the archived one from February 2001.</p><br><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td bgcolor="#999999" height="1"></td></tr></table><br><a name="chat"></a><font size="4"><b>Chat adapters</b></font><br><br><p>Chat is a replaceable part. The default keeps messages inside NIM. An adapter can put them somewhere else instead, and IRC is the worked example rather than the only option.</p><p>An adapter implements this. Nothing in it is IRC-specific, which is the point:</p><font size="2" color="#666666">napster.providers . ChatTarget</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">@runtime_checkable
+class ChatTarget(Protocol):
+    &quot;&quot;&quot;Channels and messages. The sandbox stays authoritative for state.
+
+    A chat target is a transport and optional mirror, never the source of
+    truth -- otherwise the lists the client *must* receive (408/409, 618/828)
+    would depend on whether the target happens to have a concept of membership
+    (BRIEF.md 7.5).
+    &quot;&quot;&quot;
+
+    #: What the far side can actually do. Where a target lacks a concept --
+    #: an ActivityPub timeline has no membership -- the sandbox synthesises it
+    #: from its own state rather than degrading the protocol.
+    capabilities: frozenset[str]
+
+    def bind_chat(self, bridge: &quot;ChatBridge&quot;) -&gt; None:
+        &quot;&quot;&quot;Receive the inbound handle. Called once, before any traffic.
+
+        Without this an adapter is outbound-only: it can push Napster chat into
+        IRC but nothing can come back, which is half a bridge.
+        &quot;&quot;&quot;
+
+    # outbound: the Napster client did something
+    def on_join(self, session: Session, channel: str) -&gt; None: ...
+    def on_part(self, session: Session, channel: str) -&gt; None: ...
+    def on_public(self, session: Session, channel: str, text: str) -&gt; None: ...
+    def on_emote(self, session: Session, channel: str, text: str) -&gt; None: ...
+
+    def on_private(self, session: Session, to: str, text: str) -&gt; bool:
+        &quot;&quot;&quot;A private message. Return True if the adapter delivered it.
+
+        The sandbox calls this when the recipient is **not** a local session,
+        so a Napster user can message someone who exists only on IRC.
+        &quot;&quot;&quot;</font></pre></td></tr></table><p>Those are the outbound hooks. For traffic coming the other way the adapter is handed a bridge at bind time, and deals in nicks, channels and text. It never formats a wire message:</p><font size="2" color="#666666">napster.chat.irc . IrcChat.bind_chat</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def bind_chat(self, bridge: &quot;ChatBridge&quot;) -&gt; None:
+    self.bridge = bridge
+    if not self.advertise:
+        return
+    # Make the offer visible where the client already looks. The channel
+    # list is a window in the client; a channel that exists with a topic
+    # is an invitation that needs no documentation.
+    bridge.ensure_channel(
+        self.console_channel,
+        &quot;nim&#x27;s IRC console -- type: help&quot;)
+    for entry in self.catalog:
+        bridge.ensure_channel(entry.channel,
+                              f&quot;{entry.note} [{entry.network}]&quot;)</font></pre></td></tr></table><font size="2" color="#666666">napster.chat.irc . IrcChat.on_public</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def on_public(self, session: Session, channel: str, text: str) -&gt; None:
+    if channel == self.console_channel:
+        self._run_console(session.nick, text, private=False)
+        return
+    where = self._resolve(channel)
+    if not where.bridged:
+        return
+    conn = self._conns.get((where.network, session.nick))
+    if conn is None:
+        self._spawn(self._say_later(where, session.nick, text))
+        return
+    conn.privmsg(where.channel, text)</font></pre></td></tr></table><p>A user who exists only on the far side is registered through the bridge as a session with no socket. NIM stays the authority on who is in a channel, because the client asks for that list whether or not the far side has a concept of it. That is what makes a protocol with different semantics, Matrix or XMPP, a matter of writing the same two directions again rather than changing NIM.</p><br><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td bgcolor="#999999" height="1"></td></tr></table><br><a name="search"></a><font size="4"><b>Search and users</b></font><br><br><p>There is no network to search. NIM indexes a directory you point it at and answers searches from it, attributing each file to someone who does not exist.</p><p>Attribution happens when a file is indexed, not when it is found. A file keeps its owner, so the same track is always offered by the same person and browsing their library shows a coherent set. Owners cluster by directory, because a real shared folder is a collection rather than a sample:</p><font size="2" color="#666666">napster.providers.collection . LocalCollection._owner_for</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">def _owner_for(self, path: Path) -&gt; Persona:
+    folder = path.parent
+    held = self._owner_of_dir.get(folder)
+    if held is not None and self._rng.random() &gt; self.spread:
+        self._by_nick_persona.setdefault(held.nick, held)
+        return held
+    person = self.people.make()
+    self._by_nick_persona[person.nick] = person
+    self._owner_of_dir.setdefault(folder, person)
+    return person</font></pre></td></tr></table><p>Seventeen of the names are not invented. They are read off the one surviving screenshot of the client in use, and are handed out before anything is generated:</p><font size="2" color="#666666">napster.personas . OBSERVED</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">#: Real nicks, read whole off the screenshot. Nothing here was invented.
+OBSERVED: tuple[str, ...] = (
+    &quot;ldhull&quot;, &quot;mrbrin&quot;, &quot;big_bang_&quot;, &quot;adie_m&quot;, &quot;dude_way&quot;, &quot;hittermerbitter&quot;,
+    &quot;Creano1&quot;, &quot;stearch&quot;, &quot;albear69&quot;, &quot;catalina2136&quot;, &quot;angel3339&quot;, &quot;raybauduc&quot;,
+    &quot;cybermoose&quot;, &quot;4StringMF&quot;, &quot;aoldude67&quot;, &quot;tubbedbird&quot;, &quot;fgjfkdftdvbfvcv&quot;,
+)</font></pre></td></tr></table><p>Generated names follow the shapes those seventeen exhibit, rather than a modern idea of a username. Word plus digits, two words joined, a compound noun, initials and a surname, or a keyboard mash:</p><font size="2" color="#666666">napster.personas . Personas._SHAPES</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">_SHAPES = (
+    (&quot;word_digits&quot;, _word_digits, 30),
+    (&quot;word_word&quot;, _word_word, 16),
+    (&quot;compound&quot;, _compound, 22),
+    (&quot;initials&quot;, _initials, 14),
+    (&quot;digit_camel&quot;, _digit_camel, 8),
+    (&quot;mash&quot;, _mash, 10),
+)</font></pre></td></tr></table><p>What a search returns is a row per file. The address is explicit rather than taken from a socket, because these people have no sockets: their files are served by this machine.</p><font size="2" color="#666666">napster.providers . Hit</font><table border="0" cellpadding="8" cellspacing="0" width="100%" bgcolor="#BBBB88"><tr><td><pre><font face="Courier New, monospace" size="2">@dataclass(frozen=True, slots=True)
+class Hit:
+    &quot;&quot;&quot;One search result, before the sandbox turns it into a 201.
+
+    ``ip`` and ``port`` are **explicit**, not substituted from the socket: a
+    real server fills them from the session registry, a sandbox fills them with
+    whatever its local peer endpoint is. One type serves both.
+    &quot;&quot;&quot;
+
+    filename: str
+    checksum: str
+    size: int
+    bitrate: int
+    frequency: int
+    seconds: int
+    nick: str
+    ip: int
+    link_type: int = 0
+    weight: int | None = None</font></pre></td></tr></table><p>Nothing here invents files. The collection is whatever it is, and a search with no match returns nothing.</p>
+</font></td></tr></table></td></tr></table>
+</td></tr></table>
+</body></html>
