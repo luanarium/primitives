@@ -115,5 +115,13 @@ disagreement.
 
 The conformance checks were run in the session that assembled this bundle: 34 of
 34 with `rns` and `lxmf` installed, and 34 of 34 with neither, plus the
-three-invariant `--prove` run. Anything designed and unbuilt is in
-`DISSEMINATION.md` and says so there rather than reading as finished.
+three-invariant `--prove` run.
+
+**What those runs do not prove:** all 34 use the in-process loopback carrier,
+so the event layer is tested and **the LXMF binding in §14 is not**. It is
+adapted from code that ran for real in the project this came out of, and its
+`ask` method is an unwritten stub, so it is a specification with provenance
+rather than tested code. `PRIMITIVE.md` says what to do before trusting it.
+
+Anything designed and unbuilt is in `DISSEMINATION.md` and says so there rather
+than reading as finished.

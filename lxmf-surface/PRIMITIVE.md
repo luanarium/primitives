@@ -24,11 +24,25 @@ surface = Surface(carrier=LxmfCarrier(storage_path="/var/lib/app/lxmf"))
 # real peers, real announces, events on real messages
 ```
 
-**A port that passes the 34 checks behaves like the original.** They cover every
-behaviour a destination project depends on: canonicalisation, tamper rejection,
-the gate, the pending pen, convergence under reordering, the version rule, the
-index merge, the fetch refusals, membership replay, the gossip bounds, and a
-peer that lies about what it holds.
+**A port that passes the 34 checks behaves like the original**, for everything
+above §14. They cover canonicalisation, tamper rejection, the gate, the pending
+pen, convergence under reordering, the version rule, the index merge, the fetch
+refusals, membership replay, the gossip bounds, and a peer that lies about what
+it holds.
+
+### What the checks do not cover, stated plainly
+
+**Every one of the 34 runs on `LoopbackCarrier`, in one process. `LxmfCarrier`
+is never instantiated.** So §1 to §13 are exercised and §14 is not.
+
+§14 is adapted from code that ran in the project this was condensed from, and
+its rules are the findings in [modules/carriage.md](modules/carriage.md) rather
+than guesses. But as it stands in this file it has **not been executed against
+a running Reticulum**, and `LxmfCarrier.ask` is an unwritten stub. Treat the
+whole section as a specification with working provenance, not as tested code:
+stand two instances up in separate network namespaces and exercise send,
+announce, receive and the pull before trusting any of it. Everything above it
+is tested and portable today.
 
 ## What is in it
 
