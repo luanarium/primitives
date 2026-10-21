@@ -37,31 +37,39 @@ comparison pair cut from it; `drone/samples/README.md` says how to remake it.
 
 ## lxmf-surface
 
-A shared surface over Reticulum and LXMF — posts, comments, reactions, chat
-channels, rooms, and content shared by catalog rather than by bytes.
-`python3 primitive/smoke_test.py` runs 34 checks on the standard library alone;
-with `rns` and `lxmf` installed the same checks run against the real Reticulum
-hashing and signing.
+Posts, comments, reactions, chat channels, rooms, and large files shared by
+passing round a list of what exists rather than the files themselves, all of it
+over Reticulum and LXMF. `python3 primitive/smoke_test.py` runs 34 checks on
+the standard library alone; with `rns` and `lxmf` installed the same checks run
+against the real Reticulum hashing and signing.
 
-The framing it argues for: this is five problems and the message layer answers
-one. The payload shape, local durability, dissemination, protocol adapters and
-sharing content at scale are all yours — routing delivers packets and LXMF
-delivers messages, and neither knows what is inside. The one that bites is
-that **delivery is not dissemination**: sending to every peer you know reaches
-only the peers you know at that moment, store-and-forward is a mailbox rather
-than a topic bus, and an instance that was asleep never gets the event. The
-answer is to ask rather than flood.
+LXMF carries a message from one identity to another and tells you whether it
+arrived. It does not decide what goes inside the message, keep a copy of it,
+get it to somebody whose machine was switched off, translate it for a chat
+client, or move a file too large to send. Those five jobs are what a chat and
+social application mostly consists of, and they are what this bundle is about.
 
-The rest is convergence and the failures that are silent. Two instances holding
-the same events have to agree without a clock, which makes reactions an OR-Set
-and replaceable records carry a per-author version. `BRIEF.md` has sixteen
-numbered corrections where the stack's behaviour contradicts its documentation
-or the obvious reading, and eleven failures ranked by how often they happen —
-led by a coroutine created in a delivery callback, which never runs and says
-nothing. `DISSEMINATION.md` is the designed-and-unbuilt half, including three
-decisions that were reversed.
+The third one causes the most trouble, so it gets the most space. Sending an
+event to every peer you currently know reaches only the peers you currently
+know, so anyone who was offline misses it and nothing tries again. LXMF's
+store-and-forward does not cover this: it holds messages for one named
+recipient, not for a topic. What works is asking rather than sending. A peer
+says which events it holds, you compare that against your own store, and you
+fetch the difference.
 
-Python 3.10, standard library only; `rns` and `lxmf` are optional and only the
+The rest is agreement between two instances, and the failures that are silent.
+Two instances holding the same events have to reach the same answer without
+trusting a clock, because a timestamp is only good to the second and somebody
+changing their mind is faster than that. So a reaction is stored as a set of
+additions and cancellations, and anything that gets edited carries a counter
+written by its author instead. `BRIEF.md` lists sixteen places where these
+libraries behave differently from their own documentation, and eleven failures
+ranked by how often they happen. Top of that list is a callback that runs on
+the wrong thread, does nothing, and reports no error. `DISSEMINATION.md` holds
+what is designed but not built, including three decisions that were made and
+then reversed.
+
+Python 3.10, standard library only. `rns` and `lxmf` are optional and only the
 last section of the file needs them.
 
 ## napster
@@ -89,8 +97,8 @@ the disagreement is stated.
 
 `pages/` holds the pages that populate the client's three browser tabs, written
 for the project, plus manifests describing archived ones. `NETWORK.md` is a
-roadmapped network layer — peer discovery as a provider, instance-to-instance
-transfers, a layer 2 segment across hosts — which is designed and not built, so
+roadmapped network layer (peer discovery as a provider, instance-to-instance
+transfers, a layer 2 segment across hosts) which is designed and not built, so
 it transfers as decisions and conventions rather than code. `modules/` is one
 brief per module of the source project, each saying whether the primitive
 lifted it and what to carry across if not.
@@ -133,9 +141,10 @@ How they get there:
    and are bit identical, which is the only useful form of that claim about
    something judged by ear. Napster's thirteen each print what they saw on the
    wire, so the test output doubles as a transcript of a first session, and
-   lxmf-surface's thirty-four do the same — with a `--prove` mode that breaks
-   three invariants on purpose and fails if the checks do not notice, because a
-   check that never saw the behaviour it names is worse than no check.
+   lxmf-surface's thirty-four do the same. That one also has a `--prove` mode,
+   which breaks three invariants on purpose and fails if the checks do not
+   notice, because a check that never saw the behaviour it names is worse than
+   no check.
 
 All three are laid out to be read from the top. `napster_primitive.py` and
 `lxmf_surface.py` are sections in dependency order, each self-contained enough
