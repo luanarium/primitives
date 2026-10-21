@@ -17,23 +17,47 @@ Every bundle is self-contained and nothing here depends on anything else here.
 
 ## drone
 
-Note-level analysis of recorded meditative music, and a generator built from
-what it found. `node primitive/drone.mjs --minutes 10 --out .` renders ten
-minutes in about two minutes from one dependency-free Node file;
-`node primitive/smoke_test.mjs` runs thirteen checks in eight seconds.
+**What it is for.** Generating meditative drone music by computation instead of
+downloading a recording of it. An hour of this music is a large file for
+something that is not a recording of anything, so it is rendered on demand
+instead. What the engine does came from measuring a real seventy minute
+recording note by note.
 
-Four rounds of writing this music by ear stayed wrong. The fifth ran a seventy
-minute reference recording through a piano roll written for the job, and the
-numbers contradicted the usual description of the genre: chords every 8 to 13
-seconds rather than every minute, notes struck in a tenth of a second rather
-than swelled, plain triads rather than stacked ninths, nothing above 2 kHz.
-Built from those, the engine lands within 2.6 dB of the reference at every
-octave. `BRIEF.md` has the fourteen corrections, `NEXT.md` what is designed
-and not built.
+**What is built.** `primitive/drone.mjs`, 1130 lines, no dependencies, which
+renders ten minutes of audio in about two minutes:
 
-Node and ffmpeg for the engine, python3 and ffmpeg for the four analysis
-scripts. The reference recording is not included, nor the one minute
-comparison pair cut from it; `drone/samples/README.md` says how to remake it.
+| | |
+|---|---|
+| the voice | six independent drifting partials per note plus a band of noise, and the envelopes that strike and hold them |
+| the score | the engine composing for itself, or playing a transcription of somebody else's notes through the same voice |
+| the room | the ceiling, the master slope, the ripple and the reverb |
+| the measured constants | two chord progressions, what a note is made of, and what a struck bar is made of |
+| the seam | `COMPOSER`, every method defaulted, so calling it with no arguments still produces the genre |
+| the command line half | argument parsing, ffmpeg on a pipe and the sidecar note, all behind deferred imports |
+| the analysis | the four scripts that produced the numbers: a piano roll, peak detection, band profiles and a transcriber |
+
+**It is tested.** `node primitive/smoke_test.mjs` runs thirteen checks in eight
+seconds. Three of them hash ten seconds of output against the generator this
+was condensed from and are bit identical, which is the only useful form of that
+claim about something judged by ear.
+
+**What is not built.** `NEXT.md` holds it, and opens with a listening test
+rather than a change: the oscillator was rebuilt for measured reasons and
+nobody has judged the result by ear since. The other gap is that every number
+here came off one recording, so a second reference is the first thing worth
+doing.
+
+**The finding that shaped the most of it.** Four rounds of writing this music by
+ear stayed wrong. The fifth ran the reference recording through a piano roll
+written for the job, and the numbers contradicted the usual description of the
+genre: chords every 8 to 13 seconds rather than every minute, notes struck in a
+tenth of a second rather than swelled, plain triads rather than stacked ninths,
+nothing above 2 kHz. Built from those, the engine lands within 2.6 dB of the
+reference at every octave. `BRIEF.md` numbers fourteen such corrections.
+
+Node and ffmpeg for the engine, python3 and ffmpeg for the analysis. The
+reference recording is not included, nor the one minute comparison pair cut
+from it; `drone/samples/README.md` says how to remake it.
 
 ## lxmf-surface
 
@@ -48,7 +72,7 @@ client's protocol, or move a large file. This bundle is the layer that does
 those five things, and the primitive is that layer in one file.
 
 **What is built.** `primitive/lxmf_surface.py`, 1822 lines, standard library
-only, in fourteen sections:
+only, in fourteen sections, grouped here:
 
 | | |
 |---|---|
@@ -66,11 +90,11 @@ only, in fourteen sections:
 `lxmf 1.2.0`, and pass again with neither installed. `--prove` breaks three of
 the invariants on purpose and fails if the checks do not catch them.
 
-**What is not built**, and is written down instead: announcing a digest so a
-peer can skip asking, running as a store-and-forward node, encrypted private
-topics, and emitting LXMF's own standard fields alongside the events.
-`DISSEMINATION.md` holds those, with three decisions that were made and then
-reversed.
+**What is not built.** Announcing a digest so a peer can skip asking, running
+as a store-and-forward node, encrypted private topics, and emitting LXMF's own
+standard fields alongside the events. `DISSEMINATION.md` holds all four,
+written down rather than half-built, with three decisions that were made and
+then reversed.
 
 **The finding that shaped the most of it.** Sending an event to every peer you
 currently know reaches only the peers you currently know, so anyone who was
@@ -88,34 +112,50 @@ last section of the file needs them.
 
 ## napster
 
-Everything needed to support an original Napster 2.0 BETA 9 client
-(build `02b09`, dated 10 January 2001), written for a tool that does not have
-the source project in front of it. The client is not distributed or linked
-here; the bundle carries the digests that identify a copy and names the
-open-source clients that speak the same protocol.
+**What it is for.** Being the whole world of an original Napster 2.0 BETA 9
+client (build `02b09`, dated 10 January 2001), so the client works again with
+nothing configured inside it. The client is not distributed or linked here; the
+bundle carries the digests that identify a copy and names the open-source
+clients that speak the same protocol.
 
-`primitive/napster_primitive.py` is the whole protocol substrate in one
-stdlib-only file, with a `Backend` seam to fill: implement search, resolve and
-source_for and a real client logs in, searches and downloads.
-`primitive/smoke_test.py` is thirteen conformance checks, each printing what it
-saw, so its output doubles as a transcript of a first session on the wire.
+**What is built.** `primitive/napster_primitive.py`, 1943 lines, standard
+library only, in twelve sections, grouped here:
 
-The main finding is that a Napster client is not one client. Three of its four
-surfaces are not the protocol: an embedded WinINet browser that ignores the
-client's own proxy setting, a raw SMTP path, and a registry seed. `BRIEF.md`
-documents all four, the nine places the 2000-era specification is wrong, and
-the five things that hang the client ranked by how often they will. Behaviour
-marked OBSERVED was read off a decoded capture of the wire against a live
-client; where the specification disagrees with a capture, the capture wins and
-the disagreement is stated.
+| | |
+|---|---|
+| the wire | framing, and a field grammar that is lenient by position because the protocol has no escape character |
+| the messages | every message number, named, including the ones that exist only to refuse |
+| the checksum | the `<md5>-<bytes>` convention, stored verbatim, and the resume that breaks silently if it is parsed |
+| the state | the minimum the protocol assumes: levels, shared files, hits, sessions, channels, and a registry keyed by nick |
+| the seam | `Backend`, every method defaulted. Implement search, resolve and source_for and a real client logs in, searches and downloads |
+| the transfer | the peer wire and the file server, including the undelimited size prefix and the throttle |
+| first contact | the metaserver, which is one line of protocol on a port nobody expects |
+| the server | dispatch, the pre-login echo, list terminators owned by the framework, and push routing |
+| the listeners | three of them, and a backend shutdown that fires through cancellation |
 
-`pages/` holds the pages that populate the client's three browser tabs, written
-for the project, plus manifests describing archived ones. `NETWORK.md` is a
-roadmapped network layer (peer discovery as a provider, instance-to-instance
-transfers, a layer 2 segment across hosts) which is designed and not built, so
-it transfers as decisions and conventions rather than code. `modules/` is one
-brief per module of the source project, each saying whether the primitive
-lifted it and what to carry across if not.
+**It is tested.** `primitive/smoke_test.py` is thirteen conformance checks, each
+printing what it saw, so the output doubles as a transcript of what a first
+session looks like on the wire.
+
+**What else is here.** `pages/` holds the pages that populate the client's three
+browser tabs, written for the project, plus manifests describing archived ones.
+`modules/` is one brief per module of the source project, each saying whether
+the primitive lifted it and what to carry across if not.
+
+**What is not built.** `NETWORK.md`: peer discovery as a provider,
+instance-to-instance transfers, and a layer 2 segment across several hosts.
+Designed and not built, so it transfers as decisions and conventions rather
+than as code.
+
+**The finding that shaped the most of it.** A Napster client is not one client.
+Three of its four surfaces are not the protocol: an embedded browser that
+ignores the client's own proxy setting, a raw SMTP path, and a registry seed. A
+server that answers the protocol alone leaves three of the four unserved.
+`BRIEF.md` documents all four, the nine places the 2000-era specification is
+wrong, and the five things that hang the client ranked by how often they will.
+Behaviour marked OBSERVED was read off a decoded capture of the wire against a
+live client; where the specification disagrees with a capture, the capture wins
+and the disagreement is stated.
 
 Python 3, standard library only.
 
