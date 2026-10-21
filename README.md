@@ -11,7 +11,7 @@ Every bundle is self-contained and nothing here depends on anything else here.
 | | |
 |---|---|
 | [drone/](drone/) | note-level analysis of recorded meditative music, and a generator built from the numbers |
-| [lxmf-surface/](lxmf-surface/) | web, chat and social over LXMF: signed events, convergence without a clock, and getting them to an instance that was asleep |
+| [lxmf-surface/](lxmf-surface/) | the layer that turns LXMF message delivery into posts, chat, rooms and file sharing between instances |
 | [napster/](napster/) | what it takes to be the whole world of an original Napster 2.0 client: the protocol, and the three surfaces that are not the protocol |
 | [handoff-bundle.md](handoff-bundle.md) | the brief all three bundles were produced from, for making another one |
 
@@ -37,37 +37,51 @@ comparison pair cut from it; `drone/samples/README.md` says how to remake it.
 
 ## lxmf-surface
 
-Posts, comments, reactions, chat channels, rooms, and large files shared by
-passing round a list of what exists rather than the files themselves, all of it
-over Reticulum and LXMF. `python3 primitive/smoke_test.py` runs 34 checks on
-the standard library alone; with `rns` and `lxmf` installed the same checks run
-against the real Reticulum hashing and signing.
+**What it is for.** Running a small social network between instances over
+Reticulum and LXMF: posts and comments, reactions, chat channels, rooms, and
+sharing files that are too large to send in a message.
 
-LXMF carries a message from one identity to another and tells you whether it
+LXMF carries a message from one identity to another and reports whether it
 arrived. It does not decide what goes inside the message, keep a copy of it,
-get it to somebody whose machine was switched off, translate it for a chat
-client, or move a file too large to send. Those five jobs are what a chat and
-social application mostly consists of, and they are what this bundle is about.
+deliver it to somebody who was offline when it was sent, speak any chat
+client's protocol, or move a large file. This bundle is the layer that does
+those five things, and the primitive is that layer in one file.
 
-The third one causes the most trouble, so it gets the most space. Sending an
-event to every peer you currently know reaches only the peers you currently
-know, so anyone who was offline misses it and nothing tries again. LXMF's
-store-and-forward does not cover this: it holds messages for one named
-recipient, not for a topic. What works is asking rather than sending. A peer
-says which events it holds, you compare that against your own store, and you
-fetch the difference.
+**What is built.** `primitive/lxmf_surface.py`, 1822 lines, standard library
+only, in fourteen sections:
 
-The rest is agreement between two instances, and the failures that are silent.
-Two instances holding the same events have to reach the same answer without
-trusting a clock, because a timestamp is only good to the second and somebody
-changing their mind is faster than that. So a reaction is stored as a set of
-additions and cancellations, and anything that gets edited carries a counter
-written by its author instead. `BRIEF.md` lists sixteen places where these
-libraries behave differently from their own documentation, and eleven failures
-ranked by how often they happen. Top of that list is a callback that runs on
-the wrong thread, does nothing, and reports no error. `DISSEMINATION.md` holds
-what is designed but not built, including three decisions that were made and
-then reversed.
+| | |
+|---|---|
+| the payload | the signed JSON event every message carries, the one canonical serialisation its signature depends on, and the hashing and signing underneath |
+| storage | an append-only SQLite store, and a notification bus whose queues are bounded and count what they drop |
+| the gate | the single function that verifies anything arriving from outside, and the pen that holds an event whose author has not announced yet |
+| social | posts, comments and reactions, with the resolution rules that make two instances agree |
+| editing | a per-author version counter, for records that get replaced rather than added to |
+| file sharing | a shared index, so instances exchange a list of what each one holds instead of the files, and a fetch that resolves a key or refuses |
+| chat | room and channel membership, and the mapping between a channel and a topic |
+| catch-up | asking a peer which events it holds and fetching the difference |
+| the binding | LXMF and Reticulum, as the last section only, behind a seam the rest does not see |
+
+**It is tested.** 34 conformance checks pass against the real `rns 1.5.7` and
+`lxmf 1.2.0`, and pass again with neither installed. `--prove` breaks three of
+the invariants on purpose and fails if the checks do not catch them.
+
+**What is not built**, and is written down instead: announcing a digest so a
+peer can skip asking, running as a store-and-forward node, encrypted private
+topics, and emitting LXMF's own standard fields alongside the events.
+`DISSEMINATION.md` holds those, with three decisions that were made and then
+reversed.
+
+**The finding that shaped the most of it.** Sending an event to every peer you
+currently know reaches only the peers you currently know, so anyone who was
+offline misses it and nothing tries again. LXMF's store-and-forward does not
+cover this, because it holds messages for one named recipient rather than for a
+topic. Asking works where sending does not: a peer says which events it holds,
+you compare that against your own store, and you fetch what you are missing.
+Separately from that, `BRIEF.md` numbers sixteen places where these libraries
+behave differently from their own documentation, and ranks eleven failures by
+how often they happen. Top of that list is a callback that runs on the wrong
+thread, does nothing, and reports no error.
 
 Python 3.10, standard library only. `rns` and `lxmf` are optional and only the
 last section of the file needs them.
