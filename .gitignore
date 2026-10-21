@@ -1,0 +1,3 @@
+# running the conformance checks leaves these behind
+__pycache__/
+*.pyc

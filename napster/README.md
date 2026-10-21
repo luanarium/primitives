@@ -28,7 +28,7 @@ handoff/
   handoff-bundle.md        not content: the brief that specifies this bundle's
                            own shape, for producing another one between two
                            other projects. A copy, so the bundle travels;
-                           ~/.claude/briefs/handoff-bundle.md is canonical
+                           the canonical one lives outside this repository
 ```
 
 ## Read it in this order

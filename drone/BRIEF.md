@@ -165,7 +165,7 @@ Everything this reaches for that is not in the bundle.
 - **Node 18 or later**, 24.21.0 here. No package.json and no install step.
 - **The reference recording**, not shipped: `396 Hz Adrenal Fatigue Flush`,
   4270 s, 192 kbps, 97.7 MB, in the Skybox dev vault at
-  `/home/neo/Documents/skybox/skybox/`. What travels instead is minute 10:00 of
+  a local vault, not redistributed. What travels instead is minute 10:00 of
   it and the transcription of that minute, in `samples/`.
 - **The machine the numbers came from**: four cores, 3 GB of RAM. A ten minute
   render takes 2m11 on it. Nothing here needs more memory than a second of

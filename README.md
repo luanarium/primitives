@@ -11,8 +11,9 @@ Every bundle is self-contained and nothing here depends on anything else here.
 | | |
 |---|---|
 | [drone/](drone/) | note-level analysis of recorded meditative music, and a generator built from the numbers |
+| [lxmf-surface/](lxmf-surface/) | web, chat and social over LXMF: signed events, convergence without a clock, and getting them to an instance that was asleep |
 | [napster/](napster/) | what it takes to be the whole world of an original Napster 2.0 client: the protocol, and the three surfaces that are not the protocol |
-| [handoff-bundle.md](handoff-bundle.md) | the brief both bundles were produced from, for making another one |
+| [handoff-bundle.md](handoff-bundle.md) | the brief all three bundles were produced from, for making another one |
 
 ## drone
 
@@ -33,6 +34,35 @@ and not built.
 Node and ffmpeg for the engine, python3 and ffmpeg for the four analysis
 scripts. The reference recording is not included, nor the one minute
 comparison pair cut from it; `drone/samples/README.md` says how to remake it.
+
+## lxmf-surface
+
+A shared surface over Reticulum and LXMF — posts, comments, reactions, chat
+channels, rooms, and content shared by catalog rather than by bytes.
+`python3 primitive/smoke_test.py` runs 34 checks on the standard library alone;
+with `rns` and `lxmf` installed the same checks run against the real Reticulum
+hashing and signing.
+
+The framing it argues for: this is five problems and the message layer answers
+one. The payload shape, local durability, dissemination, protocol adapters and
+sharing content at scale are all yours — routing delivers packets and LXMF
+delivers messages, and neither knows what is inside. The one that bites is
+that **delivery is not dissemination**: sending to every peer you know reaches
+only the peers you know at that moment, store-and-forward is a mailbox rather
+than a topic bus, and an instance that was asleep never gets the event. The
+answer is to ask rather than flood.
+
+The rest is convergence and the failures that are silent. Two instances holding
+the same events have to agree without a clock, which makes reactions an OR-Set
+and replaceable records carry a per-author version. `BRIEF.md` has sixteen
+numbered corrections where the stack's behaviour contradicts its documentation
+or the obvious reading, and eleven failures ranked by how often they happen —
+led by a coroutine created in a delivery callback, which never runs and says
+nothing. `DISSEMINATION.md` is the designed-and-unbuilt half, including three
+decisions that were reversed.
+
+Python 3.10, standard library only; `rns` and `lxmf` are optional and only the
+last section of the file needs them.
 
 ## napster
 
@@ -70,16 +100,16 @@ Python 3, standard library only.
 ## The primitive pattern
 
 Each bundle's working part is one file that does the whole job with almost
-nothing underneath it. That is the point of them, and the method is the same in
-both cases.
+nothing underneath it. That is the point of them, and the method is the same
+every time.
 
-| | drone | napster |
-|---|---|---|
-| the file | `drone.mjs`, 1130 lines | `napster_primitive.py`, 1943 lines |
-| third party dependencies | none | none |
-| platform calls | 7 Node builtins, none above line 989 | 12 standard library modules |
-| the seam | `COMPOSER` | `Backend` |
-| the proof | 13 checks, 374 lines | 13 checks, 184 lines |
+| | drone | napster | lxmf-surface |
+|---|---|---|---|
+| the file | `drone.mjs`, 1130 lines | `napster_primitive.py`, 1943 lines | `lxmf_surface.py`, 1822 lines |
+| third party dependencies | none | none | none |
+| platform calls | 7 Node builtins, none above line 989 | 12 standard library modules | 6 standard library modules |
+| the seam | `COMPOSER` | `Backend` | `Carrier` |
+| the proof | 13 checks, 374 lines | 13 checks, 184 lines | 34 checks, 646 lines |
 
 How they get there:
 
@@ -102,16 +132,20 @@ How they get there:
    thirteen checks hash ten seconds of output against the original generator
    and are bit identical, which is the only useful form of that claim about
    something judged by ear. Napster's thirteen each print what they saw on the
-   wire, so the test output doubles as a transcript of a first session.
+   wire, so the test output doubles as a transcript of a first session, and
+   lxmf-surface's thirty-four do the same — with a `--prove` mode that breaks
+   three invariants on purpose and fails if the checks do not notice, because a
+   check that never saw the behaviour it names is worse than no check.
 
-Both files are laid out to be read from the top. `napster_primitive.py` is
-twelve sections in dependency order, each self-contained enough to lift on its
-own; `drone.mjs` runs caller first, with the platform half last.
+All three are laid out to be read from the top. `napster_primitive.py` and
+`lxmf_surface.py` are sections in dependency order, each self-contained enough
+to lift on its own, so taking a part means taking a prefix; `drone.mjs` runs
+caller first, with the platform half last.
 
 ## The shape they share
 
-Both bundles were produced from [handoff-bundle.md](handoff-bundle.md), which
-is a brief for Claude Code rather than content. Filling in four lines and
+All three bundles were produced from [handoff-bundle.md](handoff-bundle.md),
+which is a brief for Claude Code rather than content. Filling in four lines and
 pasting the rest produces another bundle between two other projects. The shape
 is a README for reading order, a BRIEF of everything learned, a PRIMITIVE
 describing the one portable file, that file and its conformance test, and one

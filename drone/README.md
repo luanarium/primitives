@@ -58,9 +58,8 @@ saved the most time.
 ## What is not here
 
 - **The reference recording**: 4270 seconds, 192 kbps, 97.7 MB of somebody
-  else's work, in the Skybox vault at `/home/neo/Documents/skybox/skybox/`. One
-  minute of it travels here instead, in `samples/`, which is the minute every
-  listening test used. Its title claims 396 Hz and it contains none; that is
+  else's work, held locally and not redistributed. One minute of it travels
+  here instead, in `samples/`, which is the minute every listening test used. Its title claims 396 Hz and it contains none; that is
   correction 1.
 - **Skybox**, which this came out of and which never called it. The generator
   was two scripts in a plugin's `tools/` directory, and a plugin for looking at

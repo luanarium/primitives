@@ -68,10 +68,9 @@ and that is the octave the question is about.
 The A/B pair, for the reason above, and the recording it was cut from.
 
 The recording the measurements came from: `396 Hz Adrenal Fatigue Flush`, 4270
-seconds, 192 kbps, 97.7 MB, in the vault at
-`/home/neo/Documents/skybox/skybox/`. It is somebody else's work and it is
-large, so what travels is the minute that the findings were taken from and the
-transcription of it. The name is also the first correction in `../BRIEF.md`:
+seconds, 192 kbps, 97.7 MB, held in a local vault. It is somebody else's work
+and it is large, so what travels is the transcription of the minute the findings
+were taken from. The name is also the first correction in `../BRIEF.md`:
 there is no 396 Hz component in it at all.
 
 The band profiles in `profiles.tsv` are normalised, each band against its own
