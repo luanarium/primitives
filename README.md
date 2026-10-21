@@ -69,43 +69,66 @@ LXMF carries a message from one identity to another and reports whether it
 arrived. It does not decide what goes inside the message, keep a copy of it,
 deliver it to somebody who was offline when it was sent, speak any chat
 client's protocol, or move a large file. This bundle is the layer that does
-those five things, and the primitive is that layer in one file.
+those five things.
 
-**What is built.** `primitive/lxmf_surface.py`, 1822 lines, standard library
-only, in fourteen sections, grouped here:
+**What it can do now**, with no network and nothing installed. `python3` and
+the one file are the whole requirement:
 
 | | |
 |---|---|
-| the payload | the signed JSON event every message carries, the one canonical serialisation its signature depends on, and the hashing and signing underneath |
-| storage | an append-only SQLite store, and a notification bus whose queues are bounded and count what they drop |
-| the gate | the single function that verifies anything arriving from outside, and the pen that holds an event whose author has not announced yet |
-| social | posts, comments and reactions, with the resolution rules that make two instances agree |
-| editing | a per-author version counter, for records that get replaced rather than added to |
-| file sharing | a shared index, so instances exchange a list of what each one holds instead of the files, and a fetch that resolves a key or refuses |
-| chat | room and channel membership, and the mapping between a channel and a topic |
-| catch-up | asking a peer which events it holds and fetching the difference |
-| the binding | LXMF and Reticulum, as the last section only, behind a seam the rest does not see |
+| identity and events | make an identity, sign an event, verify one, reject a tampered one, and hold an event from an author whose announce has not arrived yet instead of dropping it |
+| a feed | post into the default feed or a named one, comment on a post or on a comment, read a thread back flat in reading order |
+| reactions | react, change a reaction, take it back, and get the same answer on two instances that received the events in opposite orders |
+| editing | supersede a record with a per-author version, tombstone a post, and refuse a tombstone written by anyone but its author |
+| chat and rooms | map a channel to a topic both ways, attribute a speaker from the identity that signed, join and leave a room, read who is in one |
+| file sharing | publish an index of what this instance holds, merge every peer's index, fetch by key with the promised size and digest checked |
+| catch-up | ask a peer which events it holds, diff that against your own store, and fetch the difference through the same verification gate |
+| several instances | wire any number of them together in one process, take one offline, bring it back, and watch it catch up |
 
-**It is tested.** 34 conformance checks pass against the real `rns 1.5.7` and
-`lxmf 1.2.0`, and pass again with neither installed. `--prove` breaks three of
-the invariants on purpose and fails if the checks do not catch them.
+Every row is covered by the 34 checks. What needs a live network, and is
+therefore specification rather than tested code, is sending and receiving over
+real LXMF, announces, and the request call behind the pull.
 
-**What is not built.** Announcing a digest so a peer can skip asking, running
-as a store-and-forward node, encrypted private topics, and emitting LXMF's own
-standard fields alongside the events. `DISSEMINATION.md` holds all four,
-written down rather than half-built, with three decisions that were made and
-then reversed.
+**How it runs standalone.** One rule, applied twice: everything that touches a
+platform is a seam with every method defaulted, and each default does something
+useful rather than nothing.
 
-**The finding that shaped the most of it.** Sending an event to every peer you
-currently know reaches only the peers you currently know, so anyone who was
-offline misses it and nothing tries again. LXMF's store-and-forward does not
-cover this, because it holds messages for one named recipient rather than for a
-topic. Asking works where sending does not: a peer says which events it holds,
-you compare that against your own store, and you fetch what you are missing.
-Separately from that, `BRIEF.md` numbers sixteen places where these libraries
-behave differently from their own documentation, and ranks eleven failures by
-how often they happen. Top of that list is a callback that runs on the wrong
-thread, does nothing, and reports no error.
+- **`Carrier`** is how events leave and arrive. The real one is the last
+  section of the file; `LoopbackCarrier` delivers between surfaces in the same
+  process and can mark one offline, which is what makes multi-instance
+  behaviour testable with no network at all.
+- **`Identity`** is hashing and signing. With `rns` present it is the real
+  Reticulum construction; without it, a labelled stand-in, because the standard
+  library has no Ed25519 and the alternative was leaving every invariant
+  uncheckable.
+
+What is left over is pure functions on JSON and SQLite, in dependency order, so
+taking a part means taking a prefix. `PRIMITIVE.md` has the section table.
+
+**How it is shaped for LXMF.** The stack's properties decided the data design
+rather than the other way round, and that is most of the methodology:
+
+| Property of the stack | What it forced |
+|---|---|
+| A signature covers one message to one recipient | Every event signs itself, so it stays verifiable once forwarded, replayed out of store-and-forward, or carried across a federation boundary |
+| A mesh has no consensus and no privileged node, so no total order exists | Resolution asks a question about a set, never about which event came last. Reactions are additions and cancellations; edited records carry a counter written by their author |
+| An announce is the only thing that hands over an author's verifying key | A key map fed by announces, and a bounded pen holding events that arrive before the announce that would verify them |
+| Delivery is addressed per recipient, not per topic | Catch-up is asking rather than sending: a peer says what it holds and you fetch the difference. This is the finding that shaped the most of the design |
+| An announce carries 464 bytes | Digests and pointers in an announce, never payloads. The same arithmetic is why an index travels between instances and the files stay where they are |
+| Message fields arrive as a dict, or as None, or as bytes | The fields are a routing hint, so a dispatcher need not parse the JSON, and the signed JSON wins on any disagreement |
+| A mesh stays possible only if an address means the same thing on every path | Topics are `kind/name` strings rather than network-local addresses, and nothing assumes a peer shares a network with you |
+
+**It is tested.** 34 checks pass against the real `rns 1.5.7` and `lxmf 1.2.0`,
+and pass again with neither installed. `--prove` breaks three of the invariants
+on purpose and fails if the checks do not catch them. All 34 use the loopback
+carrier, so the LXMF binding itself is unexercised, which `PRIMITIVE.md` states
+along with what to do before trusting it.
+
+**What is not built.** Announcing a digest so a peer can skip asking, running as
+a store-and-forward node, encrypted private topics, and emitting LXMF's own
+standard fields so that other clients can read the posts. `DISSEMINATION.md`
+holds all four, written down rather than half-built, with three decisions that
+were made and then reversed.
 
 Python 3.10, standard library only. `rns` and `lxmf` are optional and only the
 last section of the file needs them.
