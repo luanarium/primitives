@@ -10,38 +10,29 @@ Every bundle is self-contained and nothing here depends on anything else here.
 
 | | |
 |---|---|
-| [drone/](drone/) | a drone music generator, and the measurements of a real recording that it was built from |
+| [drone/](drone/) | note-level analysis of recorded meditative music, and a generator built from the numbers |
 | [napster/](napster/) | what it takes to be the whole world of an original Napster 2.0 client: the protocol, and the three surfaces that are not the protocol |
 | [handoff-bundle.md](handoff-bundle.md) | the brief both bundles were produced from, for making another one |
 
 ## drone
 
-A drone generator in one Node file with no dependencies, and the analysis that
-produced it. `node primitive/drone.mjs --minutes 10 --out .` renders ten
-minutes in about two minutes; `node primitive/smoke_test.mjs` runs thirteen
-checks in eight seconds, three of which hash the output against the original
-generator and are bit identical.
+Note-level analysis of recorded meditative music, and a generator built from
+what it found. `node primitive/drone.mjs --minutes 10 --out .` renders ten
+minutes in about two minutes from one dependency-free Node file;
+`node primitive/smoke_test.mjs` runs thirteen checks in eight seconds.
 
-The interesting part is not the engine but what the measurements said. Four
-rounds of writing this music by ear stayed wrong. The fifth ran a seventy
+Four rounds of writing this music by ear stayed wrong. The fifth ran a seventy
 minute reference recording through a piano roll written for the job, and the
-music turned out to be doing almost nothing it sounds like it is doing: chords
-every 8 to 13 seconds rather than every minute, notes struck in a tenth of a
-second rather than swelled, chords rolled note by note, holds wildly uneven,
-plain triads rather than stacked ninths, and nothing above 2 kHz. Built from
-those numbers it lands within 2.6 dB of the reference at every octave.
+numbers contradicted the usual description of the genre: chords every 8 to 13
+seconds rather than every minute, notes struck in a tenth of a second rather
+than swelled, plain triads rather than stacked ninths, nothing above 2 kHz.
+Built from those, the engine lands within 2.6 dB of the reference at every
+octave. `BRIEF.md` has the fourteen corrections, `NEXT.md` what is designed
+and not built.
 
-Contains the four measuring scripts, the 373 note transcription of one minute
-of the reference, the measured band profiles, and one brief per part of the
-source. `BRIEF.md` holds the fourteen numbered corrections to how this music
-is usually described. `NEXT.md` holds what is designed and not built, and
-opens with the one thing still open, which is a listening test rather than a
-change.
-
-Requires Node and ffmpeg for the engine, python3 and ffmpeg for the analysis.
-Nothing here reaches the network. The reference recording is not included, and
-neither is the one minute comparison pair cut from it; `drone/samples/README.md`
-says how to make the pair again from a copy of the recording.
+Node and ffmpeg for the engine, python3 and ffmpeg for the four analysis
+scripts. The reference recording is not included, nor the one minute
+comparison pair cut from it; `drone/samples/README.md` says how to remake it.
 
 ## napster
 
