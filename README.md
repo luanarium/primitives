@@ -67,6 +67,47 @@ lifted it and what to carry across if not.
 
 Python 3, standard library only.
 
+## The primitive pattern
+
+Each bundle's working part is one file that does the whole job with almost
+nothing underneath it. That is the point of them, and the method is the same in
+both cases.
+
+| | drone | napster |
+|---|---|---|
+| the file | `drone.mjs`, 1130 lines | `napster_primitive.py`, 1943 lines |
+| third party dependencies | none | none |
+| platform calls | 7 Node builtins, none above line 989 | 12 standard library modules |
+| the seam | `COMPOSER` | `Backend` |
+| the proof | 13 checks, 374 lines | 13 checks, 184 lines |
+
+How they get there:
+
+1. **One file, no package manager.** Nothing to install and nothing to
+   resolve, so it can be dropped into another project and read top to bottom.
+2. **Everything that touches the platform goes to the bottom.** Spawning
+   ffmpeg, hashing, the filesystem and the argument parsing are the last
+   quarter of `drone.mjs`, behind dynamic imports. The part that makes the
+   audio is arithmetic and imports nothing at all.
+3. **Configuration is an argument, never module state.** The original drone
+   generator read `process.argv` at the top level of its module, which is
+   exactly why nothing could import it. Configuration became a context object
+   that every function takes, and the output became a `write` callback instead
+   of a pipe to an encoder.
+4. **One seam, with every method defaulted.** `serve(Backend())` answers a
+   real client with an empty library; `render(settings())` with no arguments is
+   still the genre. The empty case runs, so a port works before it is filled
+   in, and what to fill in is one named class.
+5. **Prove the condensation instead of describing it.** Three of drone's
+   thirteen checks hash ten seconds of output against the original generator
+   and are bit identical, which is the only useful form of that claim about
+   something judged by ear. Napster's thirteen each print what they saw on the
+   wire, so the test output doubles as a transcript of a first session.
+
+Both files are laid out to be read from the top. `napster_primitive.py` is
+twelve sections in dependency order, each self-contained enough to lift on its
+own; `drone.mjs` runs caller first, with the platform half last.
+
 ## The shape they share
 
 Both bundles were produced from [handoff-bundle.md](handoff-bundle.md), which
